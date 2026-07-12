@@ -1,0 +1,330 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+[data-theme="light"] body {
+    background: linear-gradient(135deg, #e0e7ff 0%, #fce7f3 100%);
+}
+
+calculator-container {
+    width: 100%;
+    max-width: 460px;
+    margin: 20px;
+}
+
+.calculator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    color: white;
+}
+
+[data-theme="light"] .calculator-header {
+    color: #333;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 300;
+    letter-spacing: -0.5px;
+}
+
+.theme-toggle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    color: #fff;
+}
+
+[data-theme="light"] .theme-toggle {
+    background: rgba(0, 0, 0, 0.1);
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    color: #333;
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(180deg);
+}
+
+.sun-icon, .moon-icon {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+}
+
+display-area {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    backdrop-filter: blur(10px);
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    word-break: break-all;
+}
+
+[data-theme="light"] display-area {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.expression-display {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    min-height: 1.5em;
+    text-align: right;
+}
+
+[data-theme="light"] .expression-display {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.result-display {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 600;
+    text-align: right;
+    font-family: 'Courier New', monospace;
+}
+
+[data-theme="light"] .result-display {
+    color: #333;
+}
+
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+}
+
+.button-row {
+    display: contents;
+}
+
+.btn {
+    height: 48px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    backdrop-filter: blur(5px);
+}
+
+[data-theme="light"] .btn {
+    background: rgba(0, 0, 0, 0.05);
+    color: #333;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.btn-num {
+    background: rgba(255, 255, 255, 0.15);
+    font-weight: 600;
+}
+
+.btn-num:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.btn-op, .btn-action {
+    background: rgba(255, 99, 132, 0.2);
+    font-weight: 600;
+}
+
+[data-theme="light"] .btn-op, [data-theme="light"] .btn-action {
+    background: rgba(255, 99, 132, 0.1);
+}
+
+.btn-op:hover, .btn-action:hover {
+    background: rgba(255, 99, 132, 0.3);
+}
+
+.btn-func {
+    background: rgba(99, 102, 241, 0.2);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+[data-theme="light"] .btn-func {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.btn-func:hover {
+    background: rgba(99, 102, 241, 0.3);
+}
+
+.btn-const {
+    background: rgba(56, 178, 172, 0.2);
+    font-size: 0.85rem;
+}
+
+[data-theme="light"] .btn-const {
+    background: rgba(56, 178, 172, 0.1);
+}
+
+.btn-const:hover {
+    background: rgba(56, 178, 172, 0.3);
+}
+
+.btn-equals {
+    background: rgba(255, 99, 132, 0.3);
+    font-weight: 600;
+    grid-column: span 2;
+}
+
+.btn-equals:hover {
+    background: rgba(255, 99, 132, 0.5);
+}
+
+scientific-row {
+    margin-bottom: 15px;
+}
+
+history-panel {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+    backdrop-filter: blur(10px);
+    display: none;
+}
+
+[data-theme="light"] .history-panel {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+h3 {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+[data-theme="light"] h3 {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+history-list {
+    list-style: none;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+history-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+[data-theme="light"] #historyList li {
+    color: #333;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 480px) {
+    .calculator-container {
+        max-width: 100%;
+        margin: 10px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .keypad {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+    }
+
+    .btn {
+        height: 42px;
+        font-size: 1rem;
+    }
+
+    .btn-func {
+        font-size: 0.8rem;
+    }
+
+    .btn-const {
+        font-size: 0.75rem;
+    }
+}
+
+/* Animations for button interactions */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.pressed {
+    animation: pulse 0.2s ease;
+}
+
+/* Custom cursor for better accessibility */
+button {
+    cursor: pointer;
+}
+
+/* Ensure proper focus styles for keyboard navigation */
+.btn:focus {
+    outline: 2px solid rgba(255, 99, 132, 0.5);
+    outline-offset: 2px;
+}
+
+/* Scrollbar styling */
+history-list {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+history-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+history-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+history-list::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}

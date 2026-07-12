@@ -13,11 +13,10 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 
-# Vercel loads this file directly (not as the `backend` package), so relative
-# imports (`from .calculator`) fail with ImportError and `app` is never defined
-# -> "No FastAPI entrypoint found". Support both import styles.
+# Local imports – Vercel runs the file as a module, so relative imports must work both ways
 try:
     from .calculator import evaluate, available_functions, available_constants
     from .models import (
@@ -28,7 +27,7 @@ try:
         HealthResponse,
         FunctionInfo,
     )
-except ImportError:  # running as a standalone module on Vercel
+except ImportError:  # When executed as a script (e.g., uvicorn backend.main:app)
     from calculator import evaluate, available_functions, available_constants
     from models import (
         CalculateRequest,
@@ -39,13 +38,9 @@ except ImportError:  # running as a standalone module on Vercel
         FunctionInfo,
     )
 
-from fastapi.middleware.cors import CORSMiddleware
-
 app = FastAPI()
 
-# Add CORS middleware.
-# Allow all origins so the frontend works both when opened from
-# http://localhost (web mode) and from file:// (desktop/pywebview mode).
+# CORS – allow the frontend (served from Vercel) to call the API
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -53,14 +48,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 app.title = "Calculator Service"
 app.version = "1.0.0"
-
 
 @app.get("/health")
 async def health():
     return HealthResponse(status="ok", service="calculator")
-
 
 @app.post("/calculate", response_model=CalculateResponse)
 async def calculate(req: CalculateRequest):
@@ -69,7 +63,6 @@ async def calculate(req: CalculateRequest):
         return CalculateResponse(result=result, expression=req.expression)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-
 
 @app.get("/functions", response_model=FunctionsResponse)
 async def list_functions():
@@ -83,17 +76,11 @@ async def list_functions():
     ]
     return FunctionsResponse(functions=func_list)
 
-
 @app.get("/constants", response_model=ConstantsResponse)
 async def list_constants():
     return ConstantsResponse(constants=available_constants())
 
-
-# ---------------------------------------------------------------------------
-# Serve the frontend (HTML/CSS/JS) from the same origin so the desktop window
-# and browser can load it directly at "/" and call the API without CORS issues.
-# API routes above are matched first; anything else is served as a static file.
-# ---------------------------------------------------------------------------
+# Serve the frontend from the root path when deployed on Vercel
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
 if FRONTEND_DIR.exists():
     @app.get("/")
@@ -106,8 +93,7 @@ if FRONTEND_DIR.exists():
         name="frontend",
     )
 
-
 if __name__ == "__main__":
-    # When running locally, default to 8000; on Vercel, use PORT env var
-    port = int(os.environ.get("PORT", 8000))
+    # Vercel sets PORT in the environment; default to 8000 for local dev
+    port = int(os.getenv("PORT", "8000"))
     uvicorn.run(app, host="0.0.0.0", port=port)

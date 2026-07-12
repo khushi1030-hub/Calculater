@@ -2,19 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "./backend",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "512mb",
-        "pythonVersion": "3.11"
-      }
-    },
-    {
-      "src": "./frontend",
-      "use": "@vercel/static"
+      "src": "backend/main.py",
+      "use": "@vercel/python"
     }
   ],
-  "env": {
-    "PORT": "80"
-  }
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "backend/main.py"
+    }
+  ]
 }

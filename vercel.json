@@ -16,6 +16,10 @@
       "dest": "/frontend/$1"
     },
     {
+      "src": "/(calculate|functions|constants|health)",
+      "dest": "backend/main.py"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "backend/main.py"
     },

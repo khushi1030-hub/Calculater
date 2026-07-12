@@ -162,7 +162,7 @@ class CalculatorApp {
         this.elements.resultDisplay.style.opacity = '0.7';
 
         // Send request to backend
-        fetch(`${this.state.apiBase}/calculate`, {
+        fetch(`${this.state.apiBase}/api/calculate`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

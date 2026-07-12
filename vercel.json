@@ -2,31 +2,19 @@
   "version": 2,
   "builds": [
     {
-      "src": "backend",
-      "use": "@vercel/node",
+      "src": "./backend",
+      "use": "@vercel/python",
       "config": {
-        "maxLambdaSize": "512mb"
-      },
-      "env": {
-        "PORT": "80"
+        "maxLambdaSize": "512mb",
+        "pythonVersion": "3.11"
       }
     },
     {
-      "src": "frontend",
-      "use": "@vercel/static",
-      "config": {
-        "maxCacheSize": "512kb"
-      }
+      "src": "./frontend",
+      "use": "@vercel/static"
     }
   ],
-  "functions": {
-    "api/**/*.py": {
-      "runtime": "nodejs20.x",
-      "maxMemory": "1024",
-      "maxDuration": 60
-    }
-  },
-  "rewrites": [
-    {"source": "/api/(.*)", "destination": "/backend/api/$1"}
-  ]
+  "env": {
+    "PORT": "80"
+  }
 }

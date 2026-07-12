@@ -1,0 +1,32 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "backend",
+      "use": "@vercel/node",
+      "config": {
+        "maxLambdaSize": "512mb"
+      },
+      "env": {
+        "PORT": "80"
+      }
+    },
+    {
+      "src": "frontend",
+      "use": "@vercel/static",
+      "config": {
+        "maxCacheSize": "512kb"
+      }
+    }
+  ],
+  "functions": {
+    "api/**/*.py": {
+      "runtime": "nodejs20.x",
+      "maxMemory": "1024",
+      "maxDuration": 60
+    }
+  },
+  "rewrites": [
+    {"source": "/api/(.*)", "destination": "/backend/api/$1"}
+  ]
+}

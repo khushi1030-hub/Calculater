@@ -15,15 +15,29 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from typing import List
 
-from .calculator import evaluate, available_functions, available_constants
-from .models import (
-    CalculateRequest,
-    CalculateResponse,
-    FunctionsResponse,
-    ConstantsResponse,
-    HealthResponse,
-    FunctionInfo,
-)
+# Vercel loads this file directly (not as the `backend` package), so relative
+# imports (`from .calculator`) fail with ImportError and `app` is never defined
+# -> "No FastAPI entrypoint found". Support both import styles.
+try:
+    from .calculator import evaluate, available_functions, available_constants
+    from .models import (
+        CalculateRequest,
+        CalculateResponse,
+        FunctionsResponse,
+        ConstantsResponse,
+        HealthResponse,
+        FunctionInfo,
+    )
+except ImportError:  # running as a standalone module on Vercel
+    from calculator import evaluate, available_functions, available_constants
+    from models import (
+        CalculateRequest,
+        CalculateResponse,
+        FunctionsResponse,
+        ConstantsResponse,
+        HealthResponse,
+        FunctionInfo,
+    )
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -94,5 +108,6 @@ if FRONTEND_DIR.exists():
 
 
 if __name__ == "__main__":
-    # Run with: uvicorn backend.main:app --host 0.0.0.0 --port 8000
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # When running locally, default to 8000; on Vercel, use PORT env var
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)

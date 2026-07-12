@@ -53,10 +53,12 @@ app.title = "Calculator Service"
 app.version = "1.0.0"
 
 @app.get("/health")
+@app.get("/api/health")
 async def health():
     return HealthResponse(status="ok", service="calculator")
 
 @app.post("/calculate", response_model=CalculateResponse)
+@app.post("/api/calculate", response_model=CalculateResponse)
 async def calculate(req: CalculateRequest):
     try:
         result = evaluate(req.expression)
@@ -65,6 +67,7 @@ async def calculate(req: CalculateRequest):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/functions", response_model=FunctionsResponse)
+@app.get("/api/functions", response_model=FunctionsResponse)
 async def list_functions():
     func_list = [
         FunctionInfo(
@@ -77,6 +80,7 @@ async def list_functions():
     return FunctionsResponse(functions=func_list)
 
 @app.get("/constants", response_model=ConstantsResponse)
+@app.get("/api/constants", response_model=ConstantsResponse)
 async def list_constants():
     return ConstantsResponse(constants=available_constants())
 
